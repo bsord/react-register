@@ -1,18 +1,25 @@
 import React, { Component } from "react";
 import { StatsCard } from "components/StatsCard/StatsCard.jsx";
-import { userConfig } from "variables/UserConfig.jsx";
 
 export class GitHubRepos extends Component {
   getRepoCount() {
     var _this = this;
-    var endpoint = 'https://api.github.com/users/' + userConfig.GitHub;
-    fetch(endpoint)
+    var endpoint = 'https://api.github.com/users/' + this.props.repo;
+
+    let headers = new Headers();
+    if(this.props.authToken) {
+      headers.set('Authorization', 'bearer ' + this.props.authToken);
+    }
+
+    fetch(endpoint, {method:'GET',
+      headers: headers,
+    })
     .then((resp) => resp.json())
     .then(function(data){
       _this.setState({"repos": data.public_repos});
     })
     .catch(function(err) {
-      console.log(err);
+      console.log('GitHub Fetch Error: ' + err);
     });
   }
   componentWillMount() {
@@ -26,7 +33,7 @@ export class GitHubRepos extends Component {
   render() {
     return (
       <a style={{'color':'#000000'}}
-        href={'https://github.com/' + userConfig.GitHub + '?tab=repositories'}
+        href={'https://github.com/' + this.props.repo + '?tab=repositories'}
         target='_blank'
         rel='noopener noreferrer'>
         <StatsCard

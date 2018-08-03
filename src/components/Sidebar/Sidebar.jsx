@@ -3,13 +3,6 @@ import { NavLink } from "react-router-dom";
 
 import HeaderLinks from "../Header/HeaderLinks.jsx";
 
-import imagine from "assets/img/sidebar-background.jpg";
-import logo from "assets/img/site-logo.png";
-
-import dashboardRoutes from "routes/dashboard.jsx";
-
-import { userConfig } from "../../variables/UserConfig.jsx";
-
 class Sidebar extends Component {
   constructor(props) {
     super(props);
@@ -29,56 +22,56 @@ class Sidebar extends Component {
   }
   render() {
     const sidebarBackground = {
-      backgroundImage: "url(" + imagine + ")"
+      backgroundImage: "url(" + this.props.sidebarBackground + ")"
     };
     return (
       <div
         id="sidebar"
         className="sidebar"
         data-color="black"
-        data-image={imagine}
+        data-image={this.props.sidebarBackground}
       >
         <div className="sidebar-background" style={sidebarBackground} />
         <div className="logo">
           <a
-            href={userConfig.Website}
+            href={this.props.Website}
             className="simple-text logo-mini"
           >
             <div className="logo-img">
-              <img src={logo} alt="logo_image" />
+              <i style={{color: this.props.siteLogoColor}} className={this.props.siteLogo}></i>
             </div>
           </a>
           <a
-            href={userConfig.Website}
+            href={this.props.Website}
             className="simple-text logo-normal"
           >
-            {userConfig.SiteTitle}
+            {this.props.SiteTitle}
           </a>
         </div>
         <div className="sidebar-wrapper">
           <ul className="nav">
             {this.state.width <= 991 ? <HeaderLinks /> : null}
-            {dashboardRoutes.map((prop, key) => {
-              if (!prop.redirect)
-                return (
-                  <li
-                    className={
-                      prop.upgrade
-                        ? "active active-pro"
-                        : this.activeRoute(prop.path)
-                    }
-                    key={key}
-                  >
-                    <NavLink
-                      to={prop.path}
-                      className="nav-link"
-                      activeClassName="active"
+            {this.props.sitePages.map((prop, key) => {
+              if (!prop.redirect && !prop.hidden)
+                  return (
+                    <li
+                      className={
+                        prop.upgrade
+                          ? "active active-pro"
+                          : this.activeRoute(prop.path)
+                      }
+                      key={key}
                     >
-                      <i className={prop.icon} />
-                      <p>{prop.name}</p>
-                    </NavLink>
-                  </li>
-                );
+                      <NavLink
+                        to={prop.path}
+                        className="nav-link"
+                        activeClassName="active"
+                      >
+                        <i className={prop.icon} />
+                        <p>{prop.name}</p>
+                      </NavLink>
+                    </li>
+                  );
               return null;
             })}
           </ul>
